@@ -43,8 +43,8 @@ in {
   #  })
   #];
   # Bootloader.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  #boot.kernelPackages = pkgs.linuxPackages_testing;
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_testing;
   #boot.kernelPackages = pkgs.linuxPackages_6_6;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -261,9 +261,6 @@ in {
   services.acpid = {
     enable = true;
   };
-  
-  # Udev rules
-  services.udev.packages = [miractl];
   
   services.ollama = {
     enable = false;
