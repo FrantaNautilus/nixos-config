@@ -1,0 +1,2 @@
+## Nixos configuration flake
+WIP

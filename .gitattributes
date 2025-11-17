@@ -1,0 +1,3 @@
+private/default.nix filter=git-agecrypt diff=git-agecrypt
+private/userv.nix filter=git-agecrypt diff=git-agecrypt
+private/userv-ssh.nix  filter=git-agecrypt diff=git-agecrypt

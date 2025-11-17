@@ -1,0 +1,4 @@
+[config]
+"private/default.nix" = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKRO4jZeIHbl9Yu4NtkUqb5FKmIz/D8uwH0ughHflk/w hudecvl199@leng"]
+"private/userv-ssh.nix" = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKRO4jZeIHbl9Yu4NtkUqb5FKmIz/D8uwH0ughHflk/w hudecvl199@leng"]
+"private/userv.nix" = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKRO4jZeIHbl9Yu4NtkUqb5FKmIz/D8uwH0ughHflk/w hudecvl199@leng"]
