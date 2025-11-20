@@ -8,6 +8,13 @@ in
   #nixpkgs.config.allowUnfree = true;
 
   # 2. Authorize the USB 4.0 / Thunderbolt eGPU
+  #boot.kernelModules = [
+  #  "thunderbolt"
+  #];
+  services.hardware.bolt = {
+    enable = true;
+    #authorize = "auto";  # auto-authorize attached GPUs
+  };
   # This rule automatically authorizes any Thunderbolt device upon connection.
   #services.udev.extraRules = ''
   #  ACTION=="add|change", SUBSYSTEM=="thunderbolt", ATTR{authorized}="1"
@@ -27,19 +34,22 @@ in
     "amdgpu"  # example for AMD iGPU; use "modesetting" here instead if your iGPU is Intel
     "nvidia"
   ];
-
-  hardware.nvidia.powerManagement = {
-    enable = true;
-    finegrained = true;
-  };
   
   services.switcherooControl.enable = true;
+  
+  #environment.sessionVariables = {
+  #  
+  #};
 
   # 5. Configure the Nvidia driver for PRIME Offload
+  # hardware.usb4.enable = true; # Hallucination
   hardware.nvidia = {
     # Enable modesetting
     modesetting.enable = true;
-
+    powerManagement = {
+      enable = true;
+      finegrained = true;
+    };
     ## Use the "stable" driver package
     #package = config.boot.kernelPackages.nvidiaPackages.stable;
 

@@ -6,8 +6,7 @@ let
      # Nvidia CUDA
      cudaPackages.cudatoolkit
      cudaPackages.cudnn
-     #cudaPackages.libcutensor
-     cudaPackages.cutensor
+     cudaPackages.libcutensor
      cudaPackages.libcublas
      cudaPackages.libcusparse
      cudaPackages.libcusolver
@@ -19,7 +18,10 @@ let
 in
 {
   boot.initrd.availableKernelModules = [
-    "nvidia_drm" "nvidia_modeset" "nvidia" "nvidia_uvm"
+    "nvidia"
+    "nvidia_uvm"
+    "nvidia_modeset"
+    "nvidia_drm"
   ];
   
   hardware.graphics = {

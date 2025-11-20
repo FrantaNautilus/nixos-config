@@ -43,8 +43,8 @@ in {
   #  })
   #];
   # Bootloader.
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelPackages = pkgs.linuxPackages_testing;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  #boot.kernelPackages = pkgs.linuxPackages_testing;
   #boot.kernelPackages = pkgs.linuxPackages_6_6;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -61,8 +61,10 @@ in {
     #"amdgpu.runpm=0"
     #"amdgpu.mes=0" # amdgpu 0000:c7:00.0: amdgpu: MES failed to respond to msg=REMOVE_QUEUE
     "amdgpu.gpu_recovery=1"
-    "iommu=pt"
-    "mem_sleep_default=deep"
+    #"iommu=pt"
+    "iommu=off"
+    #"mem_sleep_default=deep"
+    "mem_sleep_default=s2idle"
     # Kernel params set according to https://github.com/kyuz0/amd-strix-halo-toolboxes
     #"amd_iommu=off"
     #"amdgpu.gttsize=131072"
@@ -73,13 +75,14 @@ in {
     "ttm.pages_limit=29360128"
     "ttm.page_pool_size=29360128"
   ];
-  boot.initrd.kernelModules = [ "r8152" ];
+  boot.initrd.kernelModules = [ "r8152" "mt7925e" ];
   # it87 according to https://discourse.nixos.org/t/best-way-to-handle-boot-extramodulepackages-kernel-module-conflict/30729
   boot.kernelModules = [
     #"coretemp"
     "it87"
     #"it87.force_id=0x8623" # it87: force chip id
     "r8152"
+    "mt7925e"
   ];
   # default nixos behavior is to error if a kernel module is provided by more than one package.
   # but we're doing that intentionally, so inline the `pkgs.aggregateModules` call from 
@@ -231,11 +234,12 @@ in {
   # Fix fan speed
   services.udev.extraRules = ''
     # Automatically authorize the eGPU
-    ACTION=="add|change", SUBSYSTEM=="thunderbolt", ATTR{authorized}="1"
+    #ACTION=="add|change", SUBSYSTEM=="thunderbolt", ATTR{authorized}="1"
+    ACTION=="remove", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", RUN+="${pkgs.kmod}/bin/modprobe -r nvidia_drm nvidia_modeset nvidia_uvm nvidia"
     
     # Add rule for NVIDIA power management
-    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", ATTR{power/control}="auto"
-    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", ATTR{power/control}="auto"
+    #ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", ATTR{power/control}="auto"
+    #ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030200", ATTR{power/control}="auto"
 
     # === GNOME/GDM PRIMARY GPU FIX ===
     # Tag the internal AMD iGPU as the primary device for Mutter (Wayland)

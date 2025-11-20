@@ -3,10 +3,8 @@
 in {
   programs.git = {
     enable = true;
-    #settings.user.name = userv.userName;
-    userName = userv.userName;
-    #settings.user.email = userv.userEmail;
-    userEmail = userv.userEmail;
+    settings.user.name = userv.userName;
+    settings.user.email = userv.userEmail;
     includes = [
       {
         condition = "gitdir:~/Pers/";
