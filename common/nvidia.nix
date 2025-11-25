@@ -35,16 +35,19 @@ in
   };
   
   # Nvidia
-  hardware.nvidia.open = true;
-  #hardware.nvidia.powerManagement = {
-  #  enable = true;
-  #  finegrained = true;
-  #};
-  hardware.nvidia.nvidiaSettings = true;
+  hardware.nvidia = {
+    open = true;
+    #powerManagement = {
+    #  enable = true;
+    #  finegrained = true;
+    #};
+    nvidiaSettings = true;
+    #nvidia-container-toolkit = {
+    #  enable = true;
+    #};
+    package = nvidiaPackage;
+  };
   services.xserver.videoDrivers = [ "nvidia" ];
-  #hardware.nvidia-container-toolkit = {
-  #  enable = true;
-  #};
 
   # Add CUDA support
   nixpkgs.config.cudaSupport = true;

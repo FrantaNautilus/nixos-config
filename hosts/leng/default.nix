@@ -52,7 +52,9 @@ in {
     "mitigations=off"
     "transparent_hugepage=always"
     "acpi_enforce_resources=lax"
-    "acpi_osi=\"Windows 2009\""
+    #"acpi_osi=!acpi_osi=\"Windows 2009\"" # Emulate Win7
+    "acpi_osi=!\"acpi_osi=Windows 2015\"" # Emulate Win10
+    # "acpi_osi=Linux" # Rarely works, but worth a try
     #"microcode.amd_sha_check=off"
     "amd_iommu=on"
     "amdgpu.cwsr_enable=0"
@@ -62,7 +64,7 @@ in {
     #"amdgpu.mes=0" # amdgpu 0000:c7:00.0: amdgpu: MES failed to respond to msg=REMOVE_QUEUE
     "amdgpu.gpu_recovery=1"
     #"iommu=pt"
-    "iommu=off"
+    "iommu=soft"
     #"mem_sleep_default=deep"
     "mem_sleep_default=s2idle"
     # Kernel params set according to https://github.com/kyuz0/amd-strix-halo-toolboxes
@@ -74,16 +76,19 @@ in {
     "amdgpu.gttsize=114688"
     "ttm.pages_limit=29360128"
     "ttm.page_pool_size=29360128"
+    #"acpi_sleep=nonvs"
+    #"pci=no_d3_delay"
   ];
-  boot.initrd.kernelModules = [ "r8152" "mt7925e" ];
+  #boot.initrd.kernelModules = [ "r8152" "mt7925e" ];
   # it87 according to https://discourse.nixos.org/t/best-way-to-handle-boot-extramodulepackages-kernel-module-conflict/30729
   boot.kernelModules = [
     #"coretemp"
     "it87"
     #"it87.force_id=0x8623" # it87: force chip id
-    "r8152"
-    "mt7925e"
+    #"r8152"
+    #"mt7925e"
   ];
+  
   # default nixos behavior is to error if a kernel module is provided by more than one package.
   # but we're doing that intentionally, so inline the `pkgs.aggregateModules` call from 
   # <nixos/modules/system/boot/kernel.nix> but configured for out-of-tree modules to override in-tree ones
@@ -264,6 +269,11 @@ in {
   
   services.acpid = {
     enable = true;
+  };
+  
+  hardware.fancontrol = {
+    enable = true;
+    config = builtins.readFile(./pwmconfig.txt);
   };
   
   services.ollama = {

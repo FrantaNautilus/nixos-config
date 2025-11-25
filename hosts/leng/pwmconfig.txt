@@ -1,0 +1,37 @@
+# Configuration file for fan control
+INTERVAL=10
+DEVPATH=hwmon3=devices/platform/it87.2608
+DEVNAME=hwmon3=it8603
+
+# TEMPERATURE CONFIGURATION
+# Map PWM outputs to Temperature inputs
+FCTEMPS=hwmon3/device/pwm2=hwmon3/temp1_input hwmon3/device/pwm3=hwmon3/temp1_input
+
+# FAN SENSOR MAPPING
+# This maps the PWM control to the Fan speed sensor to verify it works.
+# FORMAT: pwm_output=fan_input
+FCFANS=hwmon3/device/pwm2=hwmon3/temp1_input hwmon3/device/pwm2=hwmon3/temp1_input
+
+# MINIMUM TEMPERATURE (°C)
+Below this temp, fans run at minimum speed.
+MINTEMP=hwmon3/device/pwm2=45 hwmon3/device/pwm3=45
+
+# MAXIMUM TEMPERATURE (°C)
+# Above this temp, fans run at max speed.
+MAXTEMP=hwmon3/device/pwm2=80 hwmon3/device/pwm3=80
+
+# MINIMUM START PWM (0-255)
+# Power required to get the fan spinning from a dead stop.
+MINSTART=hwmon3/device/pwm2=60 hwmon3/device/pwm3=60
+
+# MINIMUM STOP PWM (0-255)
+# Power level at which the fan stops spinning.
+MINSTOP=hwmon3/device/pwm2=0 hwmon3/device/pwm3=0
+
+# MINIMUM PWM (0-255)
+# The lowest speed you want the fan to run at while the system is on.
+# 75 is roughly 30%.
+MINPWM=hwmon3/pwm2=0 hwmon3/pwm3=0
+
+# MAX PWM (usually 255)
+MAXPWM=hwmon3/pwm2=255 hwmon3/pwm3=255
