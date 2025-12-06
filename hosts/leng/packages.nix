@@ -10,6 +10,7 @@ in {
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     lm_sensors
+    gnome-boxes
     wget
     gnumake
     pandoc
@@ -43,5 +44,14 @@ in {
     mission-center
     rocmPackages.rocm-smi
     #klavaro
+    # LLMs
+    crush
+    sillytavern
+    aichat
+    llm
+    llm-ls
+    goose-cli
+    #lmstudio
+    #mcphost
   ];
 }

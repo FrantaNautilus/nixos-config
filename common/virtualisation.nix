@@ -31,5 +31,7 @@
     #podman-tui # status of containers in the terminal
     docker-compose # start group of containers for dev
     #podman-compose # start group of containers for dev
+    # swtpm # Libtpms-based TPM emulator
+    # OVMF # Sample UEFI firmware for QEMU and KVM
   ];
 }

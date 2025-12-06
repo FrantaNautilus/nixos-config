@@ -1,0 +1,24 @@
+powerManagement.resumeCommands = ''
+    # --- IMMEDIATE SOFT RESET ATTEMPT ---
+    # Try to reset the chip's internal state machine immediately after resume.
+    
+    ISABIN=${pkgs.lm_sensors}/bin/isaset
+    
+    # 1. Enter Configuration Mode
+    $ISABIN -y 0x2E 0x2F 0x2E 0x87
+    $ISABIN -y 0x2E 0x2F 0x2E 0x01
+    $ISABIN -y 0x2E 0x2F 0x2E 0x55
+    $ISABIN -y 0x2E 0x2F 0x2E 0x55
+    
+    # 2. Send SOFTWARE RESET (Write 0x80 to Global Config Reg 0x02)
+    $ISABIN -y 0x2E 0x2F 0x02 0x80
+    
+    # 3. Wait 1 second for the chip's internal reset to complete
+    ${pkgs.coreutils}/bin/sleep 1
+    
+    # 4. Exit Configuration Mode and Reload the driver
+    $ISABIN -y 0x2E 0x2F 0x2E 0xAA
+    
+    ${pkgs.kmod}/bin/modprobe -r it87
+    ${pkgs.kmod}/bin/modprobe it87
+  '';

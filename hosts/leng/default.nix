@@ -215,6 +215,10 @@ in {
     NIXOS_OZONE_WL = "1";
     MOZ_USE_XINPUT2 = "1";
   };
+  environment.variables = {
+    #SSH_ASKPASS_REQUIRE = "prefer";
+    SSH_ASKPASS = pkgs.lib.mkForce "${pkgs.gcr_4}/libexec/gcr-ssh-askpass";
+  };
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
