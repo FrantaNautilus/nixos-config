@@ -19,6 +19,11 @@ in
   #services.udev.extraRules = ''
   #  ACTION=="add|change", SUBSYSTEM=="thunderbolt", ATTR{authorized}="1"
   #'';
+  
+  services.udev.extraRules = ''
+    # When the Nvidia PCI device is added, run nvidia-modprobe to create /dev/nvidia-uvm
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", RUN+="${pkgs.nvidia-modprobe}/bin/nvidia-modprobe -c0 -u"
+  '';
 
   # 3. Enable OpenGL
   #hardware.opengl = {
@@ -71,4 +76,31 @@ in
       nvidiaBusId = nvidiaGpuBusId; # Your Nvidia eGPU
     };
   };
+  # 7. Helper Script for Safe Removal
+  # "Hot Unplug" is dangerous. You must unload the driver manually 
+  # BEFORE pulling the cable to avoid a kernel panic.
+  environment.systemPackages = [
+    pkgs.nvidia-modprobe
+    (pkgs.writeShellScriptBin "egpu-prepare-removal" ''
+      echo "Stopping services accessing the GPU..."
+      
+      # Kill any stray processes using the Nvidia card
+      # (Requires lsof or fuser, but nvidia-smi can sometimes do it)
+      if command -v fuser >/dev/null; then
+         sudo fuser -k -v /dev/nvidia*
+      fi
+      
+      echo "Unloading Nvidia kernel modules..."
+      sudo rmmod nvidia_drm
+      sudo rmmod nvidia_modeset
+      sudo rmmod nvidia_uvm
+      sudo rmmod nvidia
+      
+      if [ $? -eq 0 ]; then
+        echo "SUCCESS: You can now safely unplug the eGPU."
+      else
+        echo "ERROR: Could not unload modules. Check 'nvidia-smi' for stuck processes."
+      fi
+    '')
+  ];
 }
