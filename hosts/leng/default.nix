@@ -283,7 +283,6 @@ in {
   services.ollama = {
     enable = false;
     package = pkgs.ollama-vulkan;
-    acceleration = "rocm";
     #user = "hudecvl199";
     home = "/home/hudecvl199/.ollama";
     #environmentVariables = {
