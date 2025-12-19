@@ -17,6 +17,9 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    # Pinned nixpkgs providing linux-firmware 20251111
+    nixpkgs-firmware-20251111.url =
+      "github:NixOS/nixpkgs/3acb677ea67d4c6218f33de0db0955f116b7588c";
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -104,6 +107,14 @@
           system = "x86_64-linux";
           specialArgs = superSpecialArgs;
           modules = [
+            ({ pkgs, ... }: {
+              nixpkgs.overlays = [
+                (final: prev: {
+                  linux-firmware =
+                  inputs.nixpkgs-firmware-20251111.legacyPackages.x86_64-linux.linux-firmware;
+                })
+              ];
+            })
             nixos-hardware.nixosModules.common-cpu-amd
             nixos-hardware.nixosModules.common-cpu-amd-pstate
             nixos-hardware.nixosModules.common-cpu-amd-zenpower
